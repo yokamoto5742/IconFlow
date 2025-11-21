@@ -7,7 +7,7 @@ def build_executable():
     new_version = update_version()
     subprocess.run([
         "pyinstaller",
-        "--name=マニュアル検索",
+        "--name=IconFlow",
         "--windowed",
         "--icon=assets/ManualSearch.ico",
         "--add-data", "utils/config.ini:.",
