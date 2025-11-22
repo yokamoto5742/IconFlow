@@ -9,7 +9,7 @@ def build_executable():
         "pyinstaller",
         "--name=IconFlow",
         "--windowed",
-        "--icon=assets/ManualSearch.ico",
+        "--icon=assets/app.ico",
         "--add-data", "utils/config.ini:.",
         "main.py"
     ])
