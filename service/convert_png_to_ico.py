@@ -1,5 +1,7 @@
 from PIL import Image
 
+from utils.config_manager import load_config
+
 
 def convert_png_to_ico(png_path: str, ico_path: str, sizes: list[tuple[int, int]] = None) -> None:
     """
@@ -36,11 +38,13 @@ def convert_png_to_ico(png_path: str, ico_path: str, sizes: list[tuple[int, int]
 
 def main():
     """メイン処理"""
-    png_input = "checkbox_icon.png"
-    ico_output = "checkbox_icon.ico"
+    config = load_config()
+    png_input = config.get('Paths', 'png_file_path')
+    ico_output = config.get('Paths', 'ico_file_path')
+    icon_size = config.getint('Icon', 'icon_size')
 
     try:
-        convert_png_to_ico(png_input, ico_output)
+        convert_png_to_ico(png_input, ico_output, sizes=[(icon_size, icon_size)])
     except FileNotFoundError:
         print(f"\nエラー: {png_input} が見つかりません。")
         print("\nSVGファイルをPNGに変換してください:")
