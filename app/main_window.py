@@ -36,6 +36,15 @@ class IconFlowMainWindow:
         )
         btn_svg_to_png.pack(pady=button_pady, padx=button_padx)
 
+        btn_png_to_ico = tk.Button(
+            self.root,
+            text="PNGからicoへ",
+            font=button_font,
+            width=button_width,
+            command=self.convert_png_to_ico_handler
+        )
+        btn_png_to_ico.pack(pady=button_pady, padx=button_padx)
+
         btn_svg_to_ico = tk.Button(
             self.root,
             text="SVGからicoへ",
@@ -86,6 +95,39 @@ class IconFlowMainWindow:
 
             # 変換実行
             convert_svg_to_png(svg_file, png_output)
+
+            # 出力ディレクトリを開く
+            if os.path.exists(output_path):
+                os.startfile(output_path)
+        except FileNotFoundError as e:
+            messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
+        except Exception as e:
+            messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
+
+    def convert_png_to_ico_handler(self):
+        """PNG→ico変換ボタンのハンドラ"""
+        try:
+            config = load_config()
+            downloads_path = config.get('Paths', 'downloads_path')
+            output_path = config.get('Paths', 'output_path')
+            icon_size = config.getint('Icon', 'icon_size')
+
+            # PNGファイルを選択
+            png_file = filedialog.askopenfilename(
+                title="PNGファイルを選択",
+                initialdir=downloads_path,
+                filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+            )
+
+            if not png_file:
+                return
+
+            # ファイル名（拡張子なし）を取得
+            base_name = os.path.splitext(os.path.basename(png_file))[0]
+            ico_output = os.path.join(output_path, f"{base_name}.ico")
+
+            # 変換実行
+            convert_png_to_ico(png_file, ico_output, sizes=[(icon_size, icon_size)])
 
             # 出力ディレクトリを開く
             if os.path.exists(output_path):
