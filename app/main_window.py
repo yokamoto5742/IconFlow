@@ -72,121 +72,114 @@ class IconFlowMainWindow:
         )
         btn_close.pack(pady=button_pady, padx=button_padx)
 
-    def convert_svg_to_png_handler(self):
-        """SVG→PNG変換ボタンのハンドラ"""
+    def _select_file(self, title, filetypes, initialdir):
+        """ファイル選択ダイアログを表示"""
+        return filedialog.askopenfilename(
+            title=title,
+            initialdir=initialdir,
+            filetypes=filetypes
+        )
+
+    def _get_base_name(self, file_path):
+        """ファイルのベース名（拡張子なし）を取得"""
+        return os.path.splitext(os.path.basename(file_path))[0]
+
+    def _open_output_directory(self, output_path):
+        """出力ディレクトリを開く"""
+        if os.path.exists(output_path):
+            os.startfile(output_path)
+
+    def _handle_errors(self, func):
+        """エラーハンドリングを実行"""
         try:
-            config = load_config()
-            downloads_path = config.get('Paths', 'downloads_path')
-            output_path = config.get('Paths', 'output_path')
-
-            # SVGファイルを選択
-            svg_file = filedialog.askopenfilename(
-                title="SVGファイルを選択",
-                initialdir=downloads_path,
-                filetypes=[("SVG files", "*.svg"), ("All files", "*.*")]
-            )
-
-            if not svg_file:
-                return
-
-            # ファイル名（拡張子なし）を取得
-            base_name = os.path.splitext(os.path.basename(svg_file))[0]
-            png_output = os.path.join(output_path, f"{base_name}.png")
-
-            # 変換実行
-            convert_svg_to_png(svg_file, png_output)
-
-            # 出力ディレクトリを開く
-            if os.path.exists(output_path):
-                os.startfile(output_path)
+            func()
         except FileNotFoundError as e:
             messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
         except Exception as e:
             messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
 
+    def convert_svg_to_png_handler(self):
+        """SVG→PNG変換ボタンのハンドラ"""
+        def process():
+            config = load_config()
+            downloads_path = config.get('Paths', 'downloads_path')
+            output_path = config.get('Paths', 'output_path')
+
+            svg_file = self._select_file(
+                "SVGファイルを選択",
+                [("SVG files", "*.svg"), ("All files", "*.*")],
+                downloads_path
+            )
+
+            if not svg_file:
+                return
+
+            base_name = self._get_base_name(svg_file)
+            png_output = os.path.join(output_path, f"{base_name}.png")
+
+            convert_svg_to_png(svg_file, png_output)
+            self._open_output_directory(output_path)
+
+        self._handle_errors(process)
+
     def convert_png_to_ico_handler(self):
         """PNG→ico変換ボタンのハンドラ"""
-        try:
+        def process():
             config = load_config()
             downloads_path = config.get('Paths', 'downloads_path')
             output_path = config.get('Paths', 'output_path')
             icon_size = config.getint('Icon', 'icon_size')
 
-            # PNGファイルを選択
-            png_file = filedialog.askopenfilename(
-                title="PNGファイルを選択",
-                initialdir=downloads_path,
-                filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+            png_file = self._select_file(
+                "PNGファイルを選択",
+                [("PNG files", "*.png"), ("All files", "*.*")],
+                downloads_path
             )
 
             if not png_file:
                 return
 
-            # ファイル名（拡張子なし）を取得
-            base_name = os.path.splitext(os.path.basename(png_file))[0]
+            base_name = self._get_base_name(png_file)
             ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-            # 変換実行
             convert_png_to_ico(png_file, ico_output, sizes=[(icon_size, icon_size)])
+            self._open_output_directory(output_path)
 
-            # 出力ディレクトリを開く
-            if os.path.exists(output_path):
-                os.startfile(output_path)
-        except FileNotFoundError as e:
-            messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
-        except Exception as e:
-            messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
+        self._handle_errors(process)
 
     def convert_svg_to_ico_handler(self):
         """SVG→ico変換ボタンのハンドラ"""
-        try:
+        def process():
             config = load_config()
             downloads_path = config.get('Paths', 'downloads_path')
             output_path = config.get('Paths', 'output_path')
             icon_size = config.getint('Icon', 'icon_size')
 
-            # SVGファイルを選択
-            svg_file = filedialog.askopenfilename(
-                title="SVGファイルを選択",
-                initialdir=downloads_path,
-                filetypes=[("SVG files", "*.svg"), ("All files", "*.*")]
+            svg_file = self._select_file(
+                "SVGファイルを選択",
+                [("SVG files", "*.svg"), ("All files", "*.*")],
+                downloads_path
             )
 
             if not svg_file:
                 return
 
-            # ファイル名（拡張子なし）を取得
-            base_name = os.path.splitext(os.path.basename(svg_file))[0]
+            base_name = self._get_base_name(svg_file)
             png_output = os.path.join(output_path, f"{base_name}.png")
             ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-            # まずSVG→PNG変換
             convert_svg_to_png(svg_file, png_output)
-
-            # 次にPNG→ICO変換
             convert_png_to_ico(png_output, ico_output, sizes=[(icon_size, icon_size)])
+            self._open_output_directory(output_path)
 
-            # 出力ディレクトリを開く
-            if os.path.exists(output_path):
-                os.startfile(output_path)
-        except FileNotFoundError as e:
-            messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
-        except Exception as e:
-            messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
+        self._handle_errors(process)
 
     def open_config_handler(self):
         """設定ファイルをメモ帳で開く"""
-        try:
+        def process():
             if os.path.exists(CONFIG_PATH):
                 subprocess.Popen(['notepad.exe', CONFIG_PATH])
             else:
                 messagebox.showerror("エラー", f"設定ファイルが見つかりません:\n{CONFIG_PATH}")
-        except Exception as e:
-            messagebox.showerror("エラー", f"設定ファイルを開けませんでした:\n{str(e)}")
 
-
-def run():
-    """アプリケーションを起動"""
-    root = tk.Tk()
-    IconFlowMainWindow(root)
-    root.mainloop()
+        self._handle_errors(process)
