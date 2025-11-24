@@ -98,88 +98,92 @@ class IconFlowMainWindow:
         except Exception as e:
             messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
 
+    def _process_svg_to_png_conversion(self):
+        """SVG→PNG変換処理"""
+        config = load_config()
+        downloads_path = config.get('Paths', 'downloads_path')
+        output_path = config.get('Paths', 'output_path')
+
+        svg_file = self._select_file(
+            "SVGファイルを選択",
+            [("SVG files", "*.svg"), ("All files", "*.*")],
+            downloads_path
+        )
+
+        if not svg_file:
+            return
+
+        base_name = self._get_base_name(svg_file)
+        png_output = os.path.join(output_path, f"{base_name}.png")
+
+        convert_svg_to_png(svg_file, png_output)
+        self._open_output_directory(output_path)
+
     def convert_svg_to_png_handler(self):
         """SVG→PNG変換ボタンのハンドラ"""
-        def process():
-            config = load_config()
-            downloads_path = config.get('Paths', 'downloads_path')
-            output_path = config.get('Paths', 'output_path')
+        self._handle_errors(self._process_svg_to_png_conversion)
 
-            svg_file = self._select_file(
-                "SVGファイルを選択",
-                [("SVG files", "*.svg"), ("All files", "*.*")],
-                downloads_path
-            )
+    def _process_png_to_ico_conversion(self):
+        """PNG→ico変換処理"""
+        config = load_config()
+        downloads_path = config.get('Paths', 'downloads_path')
+        output_path = config.get('Paths', 'output_path')
+        icon_size = config.getint('Icon', 'icon_size')
 
-            if not svg_file:
-                return
+        png_file = self._select_file(
+            "PNGファイルを選択",
+            [("PNG files", "*.png"), ("All files", "*.*")],
+            downloads_path
+        )
 
-            base_name = self._get_base_name(svg_file)
-            png_output = os.path.join(output_path, f"{base_name}.png")
+        if not png_file:
+            return
 
-            convert_svg_to_png(svg_file, png_output)
-            self._open_output_directory(output_path)
+        base_name = self._get_base_name(png_file)
+        ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-        self._handle_errors(process)
+        convert_png_to_ico(png_file, ico_output, sizes=[(icon_size, icon_size)])
+        self._open_output_directory(output_path)
 
     def convert_png_to_ico_handler(self):
         """PNG→ico変換ボタンのハンドラ"""
-        def process():
-            config = load_config()
-            downloads_path = config.get('Paths', 'downloads_path')
-            output_path = config.get('Paths', 'output_path')
-            icon_size = config.getint('Icon', 'icon_size')
+        self._handle_errors(self._process_png_to_ico_conversion)
 
-            png_file = self._select_file(
-                "PNGファイルを選択",
-                [("PNG files", "*.png"), ("All files", "*.*")],
-                downloads_path
-            )
+    def _process_svg_to_ico_conversion(self):
+        """SVG→ico変換処理"""
+        config = load_config()
+        downloads_path = config.get('Paths', 'downloads_path')
+        output_path = config.get('Paths', 'output_path')
+        icon_size = config.getint('Icon', 'icon_size')
 
-            if not png_file:
-                return
+        svg_file = self._select_file(
+            "SVGファイルを選択",
+            [("SVG files", "*.svg"), ("All files", "*.*")],
+            downloads_path
+        )
 
-            base_name = self._get_base_name(png_file)
-            ico_output = os.path.join(output_path, f"{base_name}.ico")
+        if not svg_file:
+            return
 
-            convert_png_to_ico(png_file, ico_output, sizes=[(icon_size, icon_size)])
-            self._open_output_directory(output_path)
+        base_name = self._get_base_name(svg_file)
+        png_output = os.path.join(output_path, f"{base_name}.png")
+        ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-        self._handle_errors(process)
+        convert_svg_to_png(svg_file, png_output)
+        convert_png_to_ico(png_output, ico_output, sizes=[(icon_size, icon_size)])
+        self._open_output_directory(output_path)
 
     def convert_svg_to_ico_handler(self):
         """SVG→ico変換ボタンのハンドラ"""
-        def process():
-            config = load_config()
-            downloads_path = config.get('Paths', 'downloads_path')
-            output_path = config.get('Paths', 'output_path')
-            icon_size = config.getint('Icon', 'icon_size')
+        self._handle_errors(self._process_svg_to_ico_conversion)
 
-            svg_file = self._select_file(
-                "SVGファイルを選択",
-                [("SVG files", "*.svg"), ("All files", "*.*")],
-                downloads_path
-            )
-
-            if not svg_file:
-                return
-
-            base_name = self._get_base_name(svg_file)
-            png_output = os.path.join(output_path, f"{base_name}.png")
-            ico_output = os.path.join(output_path, f"{base_name}.ico")
-
-            convert_svg_to_png(svg_file, png_output)
-            convert_png_to_ico(png_output, ico_output, sizes=[(icon_size, icon_size)])
-            self._open_output_directory(output_path)
-
-        self._handle_errors(process)
+    def _process_open_config(self):
+        """設定ファイルを開く処理"""
+        if os.path.exists(CONFIG_PATH):
+            subprocess.Popen(['notepad.exe', CONFIG_PATH])
+        else:
+            messagebox.showerror("エラー", f"設定ファイルが見つかりません:\n{CONFIG_PATH}")
 
     def open_config_handler(self):
         """設定ファイルをメモ帳で開く"""
-        def process():
-            if os.path.exists(CONFIG_PATH):
-                subprocess.Popen(['notepad.exe', CONFIG_PATH])
-            else:
-                messagebox.showerror("エラー", f"設定ファイルが見つかりません:\n{CONFIG_PATH}")
-
-        self._handle_errors(process)
+        self._handle_errors(self._process_open_config)
