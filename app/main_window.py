@@ -64,47 +64,47 @@ class MainWindow:
         btn_close.pack(pady=button_pady, padx=button_padx)
 
     def convert_svg_to_png_handler(self):
-        """SVG�PNG	�ܿ�n����"""
+        """SVG→PNG変換ボタンのハンドラ"""
         try:
             convert_svg_to_png()
-            messagebox.showinfo("�", "SVGK�PNGxn	�L��W~W_")
+            messagebox.showinfo("成功", "SVGからPNGへの変換が完了しました")
         except FileNotFoundError as e:
-            messagebox.showerror("���", f"ա��L�dK�~[�:\n{str(e)}")
+            messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
         except Exception as e:
-            messagebox.showerror("���", f"	�-k���LzW~W_:\n{str(e)}")
+            messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
 
     def convert_svg_to_ico_handler(self):
-        """SVG�ico	�ܿ�n����"""
+        """SVG→ico変換ボタンのハンドラ"""
         try:
-            # ~ZSVG�PNG	�
+            # まずSVG→PNG変換
             convert_svg_to_png()
 
-            # !kPNG�ICO	�
+            # 次にPNG→ICO変換
             config = load_config()
             png_input = config.get('Paths', 'png_file_path')
             ico_output = config.get('Paths', 'ico_file_path')
             icon_size = config.getint('Icon', 'icon_size')
 
             convert_png_to_ico(png_input, ico_output, sizes=[(icon_size, icon_size)])
-            messagebox.showinfo("�", "SVGK�ICOxn	�L��W~W_")
+            messagebox.showinfo("成功", "SVGからICOへの変換が完了しました")
         except FileNotFoundError as e:
-            messagebox.showerror("���", f"ա��L�dK�~[�:\n{str(e)}")
+            messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
         except Exception as e:
-            messagebox.showerror("���", f"	�-k���LzW~W_:\n{str(e)}")
+            messagebox.showerror("エラー", f"変換中にエラーが発生しました:\n{str(e)}")
 
     def open_config_handler(self):
-        """-�ա����3g�O"""
+        """設定ファイルをメモ帳で開く"""
         try:
             if os.path.exists(CONFIG_PATH):
                 subprocess.Popen(['notepad.exe', CONFIG_PATH])
             else:
-                messagebox.showerror("���", f"-�ա��L�dK�~[�:\n{CONFIG_PATH}")
+                messagebox.showerror("エラー", f"設定ファイルが見つかりません:\n{CONFIG_PATH}")
         except Exception as e:
-            messagebox.showerror("���", f"-�ա�뒋Q~[�gW_:\n{str(e)}")
+            messagebox.showerror("エラー", f"設定ファイルを開けませんでした:\n{str(e)}")
 
 
 def run():
-    """�������w�"""
+    """アプリケーションを起動"""
     root = tk.Tk()
     MainWindow(root)
     root.mainloop()
