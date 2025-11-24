@@ -68,6 +68,12 @@ class IconFlowMainWindow:
         try:
             convert_svg_to_png()
             messagebox.showinfo("成功", "SVGからPNGへの変換が完了しました")
+
+            # 出力ディレクトリを開く
+            config = load_config()
+            output_path = config.get('Paths', 'output_path')
+            if os.path.exists(output_path):
+                os.startfile(output_path)
         except FileNotFoundError as e:
             messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
         except Exception as e:
@@ -87,6 +93,11 @@ class IconFlowMainWindow:
 
             convert_png_to_ico(png_input, ico_output, sizes=[(icon_size, icon_size)])
             messagebox.showinfo("成功", "SVGからICOへの変換が完了しました")
+
+            # 出力ディレクトリを開く
+            output_path = config.get('Paths', 'output_path')
+            if os.path.exists(output_path):
+                os.startfile(output_path)
         except FileNotFoundError as e:
             messagebox.showerror("エラー", f"ファイルが見つかりません:\n{str(e)}")
         except Exception as e:
