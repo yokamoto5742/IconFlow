@@ -1,7 +1,7 @@
 import os
 import subprocess
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 
 from app import __version__
 from service.convert_png_to_ico import convert_png_to_ico
@@ -66,11 +66,28 @@ class IconFlowMainWindow:
     def convert_svg_to_png_handler(self):
         """SVG→PNG変換ボタンのハンドラ"""
         try:
-            convert_svg_to_png()
+            config = load_config()
+            downloads_path = config.get('Paths', 'downloads_path')
+            output_path = config.get('Paths', 'output_path')
+
+            # SVGファイルを選択
+            svg_file = filedialog.askopenfilename(
+                title="SVGファイルを選択",
+                initialdir=downloads_path,
+                filetypes=[("SVG files", "*.svg"), ("All files", "*.*")]
+            )
+
+            if not svg_file:
+                return
+
+            # ファイル名（拡張子なし）を取得
+            base_name = os.path.splitext(os.path.basename(svg_file))[0]
+            png_output = os.path.join(output_path, f"{base_name}.png")
+
+            # 変換実行
+            convert_svg_to_png(svg_file, png_output)
 
             # 出力ディレクトリを開く
-            config = load_config()
-            output_path = config.get('Paths', 'output_path')
             if os.path.exists(output_path):
                 os.startfile(output_path)
         except FileNotFoundError as e:
@@ -81,19 +98,33 @@ class IconFlowMainWindow:
     def convert_svg_to_ico_handler(self):
         """SVG→ico変換ボタンのハンドラ"""
         try:
-            # まずSVG→PNG変換
-            convert_svg_to_png()
-
-            # 次にPNG→ICO変換
             config = load_config()
-            png_input = config.get('Paths', 'png_file_path')
-            ico_output = config.get('Paths', 'ico_file_path')
+            downloads_path = config.get('Paths', 'downloads_path')
+            output_path = config.get('Paths', 'output_path')
             icon_size = config.getint('Icon', 'icon_size')
 
-            convert_png_to_ico(png_input, ico_output, sizes=[(icon_size, icon_size)])
+            # SVGファイルを選択
+            svg_file = filedialog.askopenfilename(
+                title="SVGファイルを選択",
+                initialdir=downloads_path,
+                filetypes=[("SVG files", "*.svg"), ("All files", "*.*")]
+            )
+
+            if not svg_file:
+                return
+
+            # ファイル名（拡張子なし）を取得
+            base_name = os.path.splitext(os.path.basename(svg_file))[0]
+            png_output = os.path.join(output_path, f"{base_name}.png")
+            ico_output = os.path.join(output_path, f"{base_name}.ico")
+
+            # まずSVG→PNG変換
+            convert_svg_to_png(svg_file, png_output)
+
+            # 次にPNG→ICO変換
+            convert_png_to_ico(png_output, ico_output, sizes=[(icon_size, icon_size)])
 
             # 出力ディレクトリを開く
-            output_path = config.get('Paths', 'output_path')
             if os.path.exists(output_path):
                 os.startfile(output_path)
         except FileNotFoundError as e:
