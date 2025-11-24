@@ -1,4 +1,9 @@
-from app.main_window import run
+import tkinter as tk
+
+from app.main_window import IconFlowMainWindow
 
 if __name__ == "__main__":
-    run()
+    root = tk.Tk()
+    IconFlowMainWindow(root)
+    root.mainloop()
+

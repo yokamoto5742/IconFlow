@@ -9,7 +9,7 @@ from service.convert_svg_to_png import convert_svg_to_png
 from utils.config_manager import CONFIG_PATH, load_config
 
 
-class MainWindow:
+class IconFlowMainWindow:
     def __init__(self, root):
         self.root = root
         self.root.title(f"IconFlow v{__version__}")
@@ -106,5 +106,5 @@ class MainWindow:
 def run():
     """アプリケーションを起動"""
     root = tk.Tk()
-    MainWindow(root)
+    IconFlowMainWindow(root)
     root.mainloop()
