@@ -142,7 +142,7 @@ class IconFlowMainWindow:
         base_name = self._get_base_name(png_file)
         ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-        convert_png_to_ico(png_file, ico_output, sizes=[(icon_size, icon_size)])
+        convert_png_to_ico(png_file, ico_output)
         self._open_output_directory(output_path)
 
     def convert_png_to_ico_handler(self):
@@ -170,7 +170,7 @@ class IconFlowMainWindow:
         ico_output = os.path.join(output_path, f"{base_name}.ico")
 
         convert_svg_to_png(svg_file, png_output)
-        convert_png_to_ico(png_output, ico_output, sizes=[(icon_size, icon_size)])
+        convert_png_to_ico(png_output, ico_output)
         self._open_output_directory(output_path)
 
     def convert_svg_to_ico_handler(self):
