@@ -1,7 +1,9 @@
-import cairosvg
+from typing import Optional
+
+import cairosvg  # type: ignore[import-not-found]
 
 
-def convert_svg_to_png(input_file_path: str = None, output_file_path: str = None):
+def convert_svg_to_png(input_file_path: Optional[str] = None, output_file_path: Optional[str] = None) -> Optional[str]:
     """SVGファイルをPNG形式に変換します
 
     Args:
