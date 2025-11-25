@@ -18,6 +18,8 @@ SVGファイルをPNGおよびICO形式に変換するPython GUIアプリケー�
 
 - Python 3.12以上
 - Windows11
+- Windows用のコンパイル済みCairoバイナリを含むGTK3ランタイムをダウンロードしてインストール
+(https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
 
 ## 必須依存ライブラリ
 
