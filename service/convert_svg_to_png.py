@@ -1,21 +1,27 @@
 from typing import Optional
 
-import cairosvg  # type: ignore[import-not-found]
+import cairosvg
 
 
-def convert_svg_to_png(input_file_path: Optional[str] = None, output_file_path: Optional[str] = None) -> Optional[str]:
+def convert_svg_to_png(input_file_path: Optional[str] = None, output_file_path: Optional[str] = None, output_size: Optional[int] = None) -> Optional[str]:
     """SVGファイルをPNG形式に変換します
 
     Args:
         input_file_path: 入力SVGファイルのパス
         output_file_path: 出力PNGファイルのパス
+        output_size: 出力PNGのサイズ（ピクセル）
     """
 
     try:
-        cairosvg.svg2png(
-            url=input_file_path,
-            write_to=output_file_path
-        )
+        kwargs = {
+            'url': input_file_path,
+            'write_to': output_file_path
+        }
+        if output_size is not None:
+            kwargs['output_width'] = output_size
+            kwargs['output_height'] = output_size
+
+        cairosvg.svg2png(**kwargs)
         print(f"変換が完了しました: {output_file_path}")
         return output_file_path
     except FileNotFoundError as e:
