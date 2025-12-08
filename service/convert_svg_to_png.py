@@ -20,6 +20,9 @@ def convert_svg_to_png(input_file_path: Optional[str] = None, output_file_path: 
         if output_size is not None:
             kwargs['output_width'] = output_size
             kwargs['output_height'] = output_size
+            print(f"SVG→PNG変換: サイズ指定 {output_size}x{output_size}")
+        else:
+            print("SVG→PNG変換: サイズ指定なし（元のサイズを使用）")
 
         cairosvg.svg2png(**kwargs)
         print(f"変換が完了しました: {output_file_path}")
