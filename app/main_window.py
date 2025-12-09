@@ -129,7 +129,7 @@ class IconFlowMainWindow:
         config = load_config()
         downloads_path = config.get('Paths', 'downloads_path')
         output_path = config.get('Paths', 'output_path')
-        icon_size = config.getint('Icon', 'icon_size')
+        ico_size = config.getint('Icon', 'ico_size')
 
         png_file = self._select_file(
             "PNGファイルを選択",
@@ -143,7 +143,7 @@ class IconFlowMainWindow:
         base_name = self._get_base_name(png_file)
         ico_output = os.path.join(output_path, f"{base_name}.ico")
 
-        convert_png_to_ico(png_file, ico_output, icon_size)
+        convert_png_to_ico(png_file, ico_output, ico_size)
         self._open_output_directory(output_path)
 
     def convert_png_to_ico_handler(self):
@@ -156,6 +156,7 @@ class IconFlowMainWindow:
         downloads_path = config.get('Paths', 'downloads_path')
         output_path = config.get('Paths', 'output_path')
         icon_size = config.getint('Icon', 'icon_size')
+        ico_size = config.getint('Icon', 'ico_size')
 
         svg_file = self._select_file(
             "SVGファイルを選択",
@@ -171,7 +172,7 @@ class IconFlowMainWindow:
         ico_output = os.path.join(output_path, f"{base_name}.ico")
 
         convert_svg_to_png(svg_file, png_output, icon_size)
-        convert_png_to_ico(png_output, ico_output, icon_size)
+        convert_png_to_ico(png_output, ico_output, ico_size)
         self._open_output_directory(output_path)
 
     def convert_svg_to_ico_handler(self):
