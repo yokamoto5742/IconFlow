@@ -6,6 +6,20 @@
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-12-10
+
+### Added
+- 変換処理のログ出力機能
+  - SVG→PNG変換時のサイズ指定ログ
+  - PNG→ICO変換時のサイズ指定ログ
+  - 元のPNG画像サイズの表示
+  - 出力ICOサイズの表示
+
+### Changed
+- ICO変換処理を改善し、`sizes`パラメータを指定してICO形式の仕様に準拠
+- config.ini の ICO設定にコメントを追加（SVG→PNG変換用 と PNG→ICO変換用の区分け）
+- SVG→PNG変換でサイズ指定がない場合のログ出力を追加
+
 ## [1.0.1] - 2025-11-25
 
 ### Added
@@ -49,5 +63,6 @@
 - バージョン 1.0.0 への初期設定
 
 [Unreleased]: https://github.com/yokamkondo/IconFlow/compare/v1.0.1...HEAD
+[1.0.2]: https://github.com/yokamkondo/IconFlow/compare/v1.0.0...v1.0.1
 [1.0.1]: https://github.com/yokamkondo/IconFlow/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/yokamkondo/IconFlow/releases/tag/v1.0.0

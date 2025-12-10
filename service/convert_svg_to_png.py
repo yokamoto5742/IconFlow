@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 import cairosvg
 
@@ -13,7 +13,7 @@ def convert_svg_to_png(input_file_path: Optional[str] = None, output_file_path: 
     """
 
     try:
-        kwargs = {
+        kwargs: dict[str, Any] = {
             'url': input_file_path,
             'write_to': output_file_path
         }

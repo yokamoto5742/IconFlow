@@ -26,8 +26,8 @@ class TestConvertPngToIco:
 
         mock_image_open.assert_called_once_with(png_path)
         mock_image.resize.assert_called_once_with((size, size), Image.Resampling.LANCZOS)
-        mock_resized_image.save.assert_called_once_with(ico_path, format='ICO')
-        mock_print.assert_called_once_with(f"変換完了: {png_path} -> {ico_path}")
+        mock_resized_image.save.assert_called_once_with(ico_path, format='ICO', sizes=[(size, size)])
+        assert mock_print.call_count == 4
 
     @patch('service.convert_png_to_ico.Image.open')
     def test_convert_png_to_ico_default_size(self, mock_image_open):
